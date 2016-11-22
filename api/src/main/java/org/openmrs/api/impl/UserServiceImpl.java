@@ -90,8 +90,8 @@ public class UserServiceImpl extends BaseOpenmrsService implements UserService {
 		
 		// TODO Check required fields for user!!
 		OpenmrsUtil.validatePassword(user.getUsername(), password, user.getSystemId());
-		
 		return dao.saveUser(user, password);
+		
 	}
 	
 	/**
@@ -627,6 +627,8 @@ public class UserServiceImpl extends BaseOpenmrsService implements UserService {
 			}
 		} else if (!dao.getLoginCredential(user).checkPassword(oldPassword)) {
 			throw new APIException("old.password.not.correct", (Object[]) null);
+		} else if (dao.getLoginCredential(user).checkPassword(newPassword)) {
+			throw new APIException("Cannot change back to old password", (Object[]) null);
 		}
 	
 		updatePassword(user, newPassword);
